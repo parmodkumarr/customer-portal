@@ -21,7 +21,7 @@ A Laravel-based Customer Database Management Portal with OAuth2 authentication a
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/parmodkumarr/customer-portal.git
 cd customer-portal
 ```
 
@@ -30,23 +30,17 @@ cd customer-portal
 composer install
 ```
 
-3. Install frontend dependencies:
-```bash
-npm install
-npm run dev
-```
-
-4. Copy the environment file:
+3. Copy the environment file:
 ```bash
 cp .env.example .env
 ```
 
-5. Generate application key:
+4. Generate application key:
 ```bash
 php artisan key:generate
 ```
 
-6. Configure your database in `.env`:
+5. Configure your database in `.env`:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -56,17 +50,23 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-7. Run migrations:
+# Also Config mailtrap or any smtp
+
+``
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=5abc751*******
+MAIL_PASSWORD=91585d2*******
+
+``
+
+6. Run migrations:
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
-8. Install Passport: IF NOT INSTALL
-```bash
-php artisan passport:install
-```
-
-9. Run This
+8. Run This
 ```
 php artisan passport:client --personal
 
@@ -89,6 +89,8 @@ php artisan test
 ```
 
 ## API Documentation
+# generate with Swagger
+`php artisan l5-swagger:generate`
 
 The API endpoints are:
 
