@@ -8,6 +8,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+    <div id="loader" style="
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        display: none;
+    ">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Customer Portal</a>
@@ -113,6 +129,8 @@
                 const tbody = document.getElementById('customersTable');
                 tbody.innerHTML = '';
 
+                showLoader();
+
                 customers.forEach(customer => {
                     tbody.innerHTML += `
                         <tr>
@@ -137,6 +155,8 @@
                     window.location.href = '/login';
                 }
                 alert('Error loading customers');
+            } finally {
+                hideLoader();
             }
         }
 
@@ -164,6 +184,8 @@
 
         // Save customer
         async function saveCustomer() {
+            if (!ensureAuth()) return;
+
             const customerId = document.getElementById('customerId').value;
             const data = {
                 first_name: document.getElementById('firstName').value,
@@ -175,7 +197,7 @@
 
             // Clear previous errors
             clearAllErrors();
-
+            showLoader();
             try {
                 if (customerId) {
                     await axios.put(`/api/customers/${customerId}`, data);
@@ -193,6 +215,8 @@
                 } else {
                     showError('form-error', error.response?.data?.message || 'Error saving customer');
                 }
+            } finally {
+                hideLoader();
             }
         }
 
@@ -239,22 +263,46 @@
             }
 
             try {
+                showLoader();
                 await axios.delete(`/api/customers/${id}`);
                 loadCustomers();
             } catch (error) {
                 alert('Error deleting customer');
+            } finally {
+                hideLoader();
             }
         }
 
         // Logout
         async function logout() {
             try {
+                showLoader();
                 await axios.post('/api/logout');
                 localStorage.removeItem('access_token');
                 window.location.href = '/login';
             } catch (error) {
                 console.error('Logout error:', error);
+            } finally {
+                hideLoader();
             }
+        }
+
+        function ensureAuth() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('Your session has expired. Please login again.');
+                window.location.href = '/login';
+                return false;
+            }
+            return true;
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
         }
 
         // Initial load

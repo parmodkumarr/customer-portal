@@ -49,6 +49,22 @@
         </div>
     </div>
 
+    <div id="loader" style="
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(255,255,255,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        display: none;
+    ">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const loginForm = document.getElementById('login');
@@ -83,12 +99,23 @@
             errorDiv.textContent = '';
         }
 
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(loginForm);
             hideError('login-error');
             clearFieldError('email');
             clearFieldError('password');
+
+            showLoader();
 
             try {
                 const response = await axios.post('/api/login', {
@@ -107,6 +134,8 @@
                 } else {
                     showError('login-error', error.response?.data?.message || 'Login failed');
                 }
+            } finally {
+                hideLoader();
             }
         });
 
@@ -115,6 +144,8 @@
             const formData = new FormData(mfaForm);
             hideError('mfa-error');
             clearFieldError('mfa_token');
+
+            showLoader();
 
             try {
                 const response = await axios.post('/api/verify-mfa', {
@@ -131,6 +162,8 @@
                 } else {
                     showError('mfa-error', error.response?.data?.message || 'MFA verification failed');
                 }
+            } finally {
+                hideLoader();
             }
         });
     </script>
