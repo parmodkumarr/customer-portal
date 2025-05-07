@@ -50,16 +50,15 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-# Also Config mailtrap or any smtp
+5. Also configure mailtrap or any smtp in `.env`:
 
-``
+```env
 MAIL_MAILER=smtp
 MAIL_HOST=sandbox.smtp.mailtrap.io
 MAIL_PORT=2525
 MAIL_USERNAME=5abc751*******
 MAIL_PASSWORD=91585d2*******
-
-``
+```
 
 6. Run migrations:
 ```bash
