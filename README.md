@@ -50,7 +50,7 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-5. Also configure mailtrap or any smtp in `.env`:
+Also configure mailtrap or any smtp in `.env`:
 
 ```env
 MAIL_MAILER=smtp
