@@ -15,11 +15,9 @@ class Customer extends Model
         'age',
         'dob',
         'email',
-        'creation_date'
     ];
 
     protected $casts = [
-        'dob' => 'date',
-        'creation_date' => 'datetime'
+        //'dob' => 'date',
     ];
 }

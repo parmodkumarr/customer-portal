@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('age');
             $table->date('dob');
             $table->string('email');
-            $table->timestamp('creation_date')->useCurrent();
             $table->timestamps();
         });
     }

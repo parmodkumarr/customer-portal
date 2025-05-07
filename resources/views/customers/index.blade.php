@@ -138,7 +138,7 @@
                             <td>${customer.first_name} ${customer.last_name}</td>
                             <td>${customer.age}</td>
                             <td>${customer.email}</td>
-                            <td>${new Date(customer.creation_date).toLocaleDateString()}</td>
+                            <td>${new Date(customer.created_at).toLocaleDateString()}</td>
                             <td>
                                 <button class="btn btn-sm btn-primary" onclick="editCustomer(${JSON.stringify(customer).replace(/"/g, '&quot;')})">
                                     <i class="bi bi-pencil"></i>

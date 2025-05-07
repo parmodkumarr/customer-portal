@@ -61,9 +61,15 @@ DB_PASSWORD=your_password
 php artisan migrate
 ```
 
-8. Install Passport:
+8. Install Passport: IF NOT INSTALL
 ```bash
 php artisan passport:install
+```
+
+9. Run This
+```
+php artisan passport:client --personal
+
 ```
 
 ## Running the Application

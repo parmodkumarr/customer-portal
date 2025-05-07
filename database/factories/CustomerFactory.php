@@ -19,7 +19,6 @@ class CustomerFactory extends Factory
             'age' => $age,
             'dob' => $dob->format('Y-m-d'),
             'email' => $this->faker->unique()->safeEmail(),
-            'creation_date' => now(),
         ];
     }
 }

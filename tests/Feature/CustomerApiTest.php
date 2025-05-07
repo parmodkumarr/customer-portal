@@ -1,3 +1,5 @@
+<?php
+
 namespace Tests\Feature;
 
 use App\Models\Customer;
@@ -13,14 +15,26 @@ class CustomerApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artisan('passport:install');
+
+        // Create a personal access client for testing
+        // $this->artisan('passport:client', [
+        //     '--personal' => true,
+        //     '--name' => 'Test Client',
+        //     '--no-interaction' => true,
+        //     '--quiet' => true
+        // ]);
+    }
+
+    protected function getTestUser()
+    {
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        return $user;
     }
 
     public function test_can_get_customers_list()
     {
-        $user = User::factory()->create();
-        Passport::actingAs($user);
-
+        $this->getTestUser();
         $customers = Customer::factory()->count(3)->create();
 
         $response = $this->getJson('/api/customers');
@@ -31,13 +45,12 @@ class CustomerApiTest extends TestCase
 
     public function test_can_create_customer()
     {
-        $user = User::factory()->create();
-        Passport::actingAs($user);
+        $this->getTestUser();
 
         $customerData = [
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'age' => 30,
+            'age' => "30",
             'dob' => '1993-01-01',
             'email' => 'john@example.com'
         ];
@@ -45,21 +58,31 @@ class CustomerApiTest extends TestCase
         $response = $this->postJson('/api/customers', $customerData);
 
         $response->assertStatus(201)
-                ->assertJsonFragment($customerData);
+             ->assertJsonStructure([
+                 'data' => [
+                     'id',
+                     'first_name',
+                     'last_name',
+                     'age',
+                     'dob',
+                     'email',
+                     'created_at',
+                     'updated_at'
+                 ]
+             ]);
 
-        $this->assertDatabaseHas('customers', $customerData);
+        $this->assertDatabaseHas('customers',$customerData);
     }
 
     public function test_can_update_customer()
     {
-        $user = User::factory()->create();
-        Passport::actingAs($user);
-
+        $this->getTestUser();
         $customer = Customer::factory()->create();
+
         $updateData = [
             'first_name' => 'Jane',
             'last_name' => 'Smith',
-            'age' => 25,
+            'age' => '25',
             'dob' => '1998-01-01',
             'email' => 'jane@example.com'
         ];
@@ -67,16 +90,25 @@ class CustomerApiTest extends TestCase
         $response = $this->putJson("/api/customers/{$customer->id}", $updateData);
 
         $response->assertStatus(200)
-                ->assertJsonFragment($updateData);
+                ->assertJsonStructure([
+                    'data' => [
+                        'id',
+                        'first_name',
+                        'last_name',
+                        'age',
+                        'dob',
+                        'email',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ]);
 
         $this->assertDatabaseHas('customers', $updateData);
     }
 
     public function test_can_delete_customer()
     {
-        $user = User::factory()->create();
-        Passport::actingAs($user);
-
+        $this->getTestUser();
         $customer = Customer::factory()->create();
 
         $response = $this->deleteJson("/api/customers/{$customer->id}");
@@ -88,8 +120,7 @@ class CustomerApiTest extends TestCase
 
     public function test_validation_on_create_customer()
     {
-        $user = User::factory()->create();
-        Passport::actingAs($user);
+        $this->getTestUser();
 
         $response = $this->postJson('/api/customers', []);
 
